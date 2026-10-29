@@ -1,0 +1,58 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: account-service-ci
+spec:
+  params:
+    - name: repo-url
+      type: string
+      description: Git repository URL
+    - name: branch
+      type: string
+      default: main
+    - name: app-name
+      type: string
+      default: account-service
+    - name: build-image
+      type: string
+      description: Full image reference to build and push
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: clone
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.branch)
+        - name: deleteExisting
+          value: "true"
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: lint
+      runAfter: [clone]
+      taskRef:
+        name: flake8
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: tests
+      runAfter: [clone]
+      taskRef:
+        name: nose
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: build
+      runAfter: [lint, tests]
+      params:
+        - name: IMAGE
+          value: $(params.build-image)
+      taskRef:
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: shared-workspace
