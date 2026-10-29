@@ -1,5 +1,7 @@
 # Account Microservice
 
+[![Account Service CI](https://github.com/TejasGogawale/devops-capstone-project/actions/workflows/ci-build.yaml/badge.svg)](https://github.com/TejasGogawale/devops-capstone-project/actions/workflows/ci-build.yaml)
+
 A Flask REST API for customer accounts with Create, Read, Update, Delete, and List operations. The API uses Flask-SQLAlchemy and SQLite by default.
 
 ## Setup
