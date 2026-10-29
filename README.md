@@ -1,14 +1,16 @@
-# Account Microservice
+# DevOps Capstone
 
 [![Account Service CI](https://github.com/TejasGogawale/devops-capstone-project/actions/workflows/ci-build.yaml/badge.svg)](https://github.com/TejasGogawale/devops-capstone-project/actions/workflows/ci-build.yaml)
 
-A Flask REST API for customer accounts with Create, Read, Update, Delete, and List operations. The API uses Flask-SQLAlchemy and SQLite by default.
+A Flask REST API microservice for customer accounts, built as the DevOps Capstone project. It supports Create, Read, Update, Delete, and List operations using Flask-SQLAlchemy and SQLite by default.
+
+> The badge above reflects the latest status reported by GitHub Actions. Verify that the workflow has a successful run before submitting this README as evidence of a successful build.
 
 ## Setup
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 ```
 
@@ -46,13 +48,13 @@ The `setup.cfg` file configures Nose's verbose, colored spec output and coverage
 ## Example
 
 ```bash
-curl -i -X POST http://127.0.0.1:5000/accounts \
-  -H "Content-Type: application/json" \
+curl -i -X POST http://127.0.0.1:5000/accounts \\
+  -H "Content-Type: application/json" \\
   -d '{"name":"John Doe","email":"john@doe.com","address":"123 Main St.","phone_number":"555-1212"}'
 curl -i http://127.0.0.1:5000/accounts
 curl -i http://127.0.0.1:5000/accounts/1
-curl -i -X PUT http://127.0.0.1:5000/accounts/1 \
-  -H "Content-Type: application/json" \
+curl -i -X PUT http://127.0.0.1:5000/accounts/1 \\
+  -H "Content-Type: application/json" \\
   -d '{"name":"John Doe","email":"john@doe.com","address":"123 Main St.","phone_number":"555-1111"}'
 curl -i -X DELETE http://127.0.0.1:5000/accounts/1
 ```
