@@ -2,7 +2,7 @@
 import os
 
 import click
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
@@ -22,7 +22,7 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-    # HTTPS redirect is disabled for local development; production should terminate TLS.
+    # HTTPS redirects are disabled for tests/local development.
     Talisman(
         app,
         force_https=not app.config.get("TESTING", False),
@@ -38,15 +38,22 @@ def create_app(test_config=None):
 
     @app.after_request
     def apply_cors_headers(response):
-        """Permit browser clients from local development origins."""
-        origin = request_origin = os.getenv("CORS_ALLOWED_ORIGIN", "http://localhost:3000")
-        incoming = app.request_class  # keep route setup independent of request globals
-        from flask import request
-        if request.headers.get("Origin") in (origin, "http://127.0.0.1:3000"):
+        """Allow browser clients only from configured local origins."""
+        allowed_origin = os.getenv(
+            "CORS_ALLOWED_ORIGIN", "http://localhost:3000"
+        )
+        if request.headers.get("Origin") in (
+            allowed_origin,
+            "http://127.0.0.1:3000",
+        ):
             response.headers["Access-Control-Allow-Origin"] = request.headers["Origin"]
             response.headers["Vary"] = "Origin"
-            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+            response.headers["Access-Control-Allow-Methods"] = (
+                "GET, POST, PUT, DELETE, OPTIONS"
+            )
+            response.headers["Access-Control-Allow-Headers"] = (
+                "Content-Type, Authorization"
+            )
         return response
 
     db.init_app(app)
